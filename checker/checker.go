@@ -1,0 +1,112 @@
+package checker
+
+import (
+	"fmt"
+	"os"
+	"sort"
+	"sync"
+
+	"github.com/jedib0t/go-pretty/table"
+	"github.com/jedib0t/go-pretty/text"
+	"github.com/muesli/termenv"
+)
+
+var (
+	mutex  sync.RWMutex
+	checks = make(map[string]Check)
+	wg     sync.WaitGroup
+	resCh  = make(chan result, 10)
+	done   = make(chan struct{})
+	p      = termenv.ColorProfile()
+)
+
+type result struct {
+	driverName string
+	found      bool
+	link       string
+}
+
+type Check interface {
+	Check(name string) bool
+	Link() string
+}
+
+func Register(name string, driver Check) {
+	mutex.Lock()
+	defer mutex.Unlock()
+	checks[name] = driver
+}
+
+func Checks() []string {
+	mutex.RLock()
+	defer mutex.RUnlock()
+	list := make([]string, 0, len(checks))
+	for name := range checks {
+		list = append(list, name)
+	}
+	sort.Strings(list)
+	return list
+}
+
+func RunAll(name string) {
+	mutex.RLock()
+	defer mutex.RUnlock()
+
+	var results []result
+	go func() {
+		for res := range resCh {
+			results = append(results, res)
+		}
+		done <- struct{}{}
+	}()
+
+	wg.Add(len(checks))
+	for k, v := range checks {
+		var driverName = k
+		var driver = v
+		go func() {
+			fmt.Printf("Checking %s for \"%s\"\n", driverName, name)
+			defer wg.Done()
+			found := driver.Check(name)
+			resCh <- result{
+				driverName: driverName,
+				found:      found,
+				link:       driver.Link(),
+			}
+		}()
+	}
+	wg.Wait()
+	close(resCh)
+	<-done
+
+	termenv.ClearScreen()
+
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.SetStyle(table.StyleColoredYellowWhiteOnBlack)
+	t.SetIndexColumn(1)
+
+	t.AppendHeader(table.Row{"#", "Driver", "Found", "Link"})
+
+	var foundCounter = 0
+
+	for i, res := range results {
+		var found termenv.Style
+		var link string
+		if res.found {
+			foundCounter++
+			link = res.link
+			found = termenv.String(fmt.Sprintf("%+v", res.found)).Foreground(p.Color("#00ff00"))
+		} else {
+			link = ""
+			found = termenv.String(fmt.Sprintf("%+v", res.found)).Foreground(p.Color("#ff0000"))
+		}
+		t.AppendRow(table.Row{i + 1, res.driverName, found, link})
+	}
+
+	title := fmt.Sprintf("Results of checking \"%s\" \n(Drivers count: %d, found in: %d)", name, len(results), foundCounter)
+	t.SetTitle(title)
+	t.Style().Title.Align = text.AlignCenter
+
+	t.Render()
+}
