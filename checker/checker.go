@@ -13,7 +13,7 @@ import (
 
 var (
 	mutex  sync.RWMutex
-	checks = make(map[string]Check)
+	checks = make(map[string]Checker)
 	wg     sync.WaitGroup
 	resCh  = make(chan result, 10)
 	done   = make(chan struct{})
@@ -26,12 +26,12 @@ type result struct {
 	link       string
 }
 
-type Check interface {
+type Checker interface {
 	Check(name string) bool
 	Link() string
 }
 
-func Register(name string, driver Check) {
+func Register(name string, driver Checker) {
 	mutex.Lock()
 	defer mutex.Unlock()
 	checks[name] = driver
