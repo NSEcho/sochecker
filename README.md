@@ -54,10 +54,10 @@ $ mkdir amazon && cd amazon
 $ vim amazon.igo
 ```
 
-Your new type needs to implement the `Check` interface methods which are:
+Your new type needs to implement the `Checker` interface methods which are:
 
 ```golang
-type Check interface {
+type Checker interface {
   Check(name string) bool
   Link() string
 }
