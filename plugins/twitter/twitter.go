@@ -2,6 +2,7 @@ package twitter
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/lateralusd/sochecker/checker"
 
@@ -12,7 +13,7 @@ var link = ""
 
 type TWCheck struct{}
 
-func (tw *TWCheck) Check(name string) bool {
+func (tw *TWCheck) Check(client *http.Client, name string) bool {
 	link = fmt.Sprintf("https://www.twitter.com/%s/", name)
 
 	scp := tsc.New().SetSearchMode(tsc.SearchUsers)

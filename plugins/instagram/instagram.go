@@ -6,7 +6,6 @@ import (
 	"net/http/cookiejar"
 	"net/url"
 	"os"
-	"time"
 
 	"github.com/lateralusd/sochecker/checker"
 	"gopkg.in/yaml.v2"
@@ -16,7 +15,7 @@ var link = ""
 
 type IGCheck struct{}
 
-func (ig *IGCheck) Check(name string) bool {
+func (ig *IGCheck) Check(client *http.Client, name string) bool {
 	igurl := fmt.Sprintf("https://www.instagram.com/%s/", name)
 	link = igurl
 	igurl += "?__a=1"
@@ -34,10 +33,7 @@ func (ig *IGCheck) Check(name string) bool {
 	req.Header.Set("User-Agent", "Instagram 10.3.2 (iPhone7,2; iPhone OS 9_3_3; en_US; en-US; scale=2.00; 750x1334) AppleWebKit/420+")
 
 	jar, _ := cookiejar.New(nil)
-	client := &http.Client{
-		Timeout: 3 * time.Second,
-		Jar:     jar,
-	}
+	client.Jar = jar
 
 	client.Get("https://www.instagram.com")
 

@@ -2,9 +2,11 @@ package checker
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/jedib0t/go-pretty/table"
 	"github.com/jedib0t/go-pretty/text"
@@ -27,7 +29,7 @@ type result struct {
 }
 
 type Checker interface {
-	Check(name string) bool
+	Check(client *http.Client, name string) bool
 	Link() string
 }
 
@@ -52,6 +54,10 @@ func RunAll(name string) {
 	mutex.RLock()
 	defer mutex.RUnlock()
 
+	client := &http.Client{
+		Timeout: 3 * time.Second,
+	}
+
 	var results []result
 	go func() {
 		for res := range resCh {
@@ -67,7 +73,7 @@ func RunAll(name string) {
 		go func() {
 			fmt.Printf("Checking %s for \"%s\"\n", driverName, name)
 			defer wg.Done()
-			found := driver.Check(name)
+			found := driver.Check(client, name)
 			resCh <- result{
 				driverName: driverName,
 				found:      found,

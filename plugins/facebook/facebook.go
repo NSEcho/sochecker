@@ -11,10 +11,10 @@ var link = ""
 
 type FBCheck struct{}
 
-func (fb *FBCheck) Check(name string) bool {
+func (fb *FBCheck) Check(client *http.Client, name string) bool {
 	url := fmt.Sprintf("https://www.facebook.com/%s/", name)
 	link = url
-	resp, err := http.Get(url)
+	resp, err := client.Get(url)
 	if err != nil {
 		return false
 	}

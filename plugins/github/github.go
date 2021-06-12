@@ -3,7 +3,6 @@ package github
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/lateralusd/sochecker/checker"
 )
@@ -12,11 +11,7 @@ var link = ""
 
 type GHCheck struct{}
 
-func (gh *GHCheck) Check(name string) bool {
-	client := &http.Client{
-		Timeout: 3 * time.Second,
-	}
-
+func (gh *GHCheck) Check(client *http.Client, name string) bool {
 	url := fmt.Sprintf("https://github.com/%s/", name)
 	link = url
 	resp, err := client.Get(url)

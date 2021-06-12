@@ -58,12 +58,12 @@ Your new type needs to implement the `Checker` interface methods which are:
 
 ```golang
 type Checker interface {
-  Check(name string) bool
+  Check(client *http.Client, name string) bool
   Link() string
 }
 ```
 
-* Check(name string) bool - for the username in `name` parameter, will return true if the user exists, or false if the user does not exist
+* Check(client *http.Client, name string) bool - for the username in `name` parameter, will return true if the user exists, or false if the user does not exist; use `client` parameter to make requests
 * Link() string - returns the link to the user page on the plugin
 
 After you implemented the following methods, you need to call `Register` function which accepts the name of the driver and the type that implements `Check` interface.
@@ -74,8 +74,9 @@ import "github.com/lateralusd/sochecker/checker"
 
 type AmazonCheck struct{}
 
-func (ac *AmazonCheck) Check(name string) bool {
+func (ac *AmazonCheck) Check(client *http.Client, name string) bool {
   // do the logic here
+  resp, err := client.Get("https://www.someurl.com")
   return false
 }
 

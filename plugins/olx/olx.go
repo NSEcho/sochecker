@@ -3,7 +3,6 @@ package olx
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/lateralusd/sochecker/checker"
 )
@@ -12,11 +11,7 @@ var link = ""
 
 type OLXCheck struct{}
 
-func (ol *OLXCheck) Check(name string) bool {
-	client := &http.Client{
-		Timeout: 5 * time.Second,
-	}
-
+func (ol *OLXCheck) Check(client *http.Client, name string) bool {
 	url := fmt.Sprintf("https://api.olx.ba/profil/%s/", name)
 	link = url
 	resp, err := client.Get(url)

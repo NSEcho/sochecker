@@ -3,7 +3,6 @@ package pinterest
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/lateralusd/sochecker/checker"
 )
@@ -12,10 +11,7 @@ var link = ""
 
 type PTCheck struct{}
 
-func (ol *PTCheck) Check(name string) bool {
-	client := &http.Client{
-		Timeout: 3 * time.Second,
-	}
+func (ol *PTCheck) Check(client *http.Client, name string) bool {
 
 	url := fmt.Sprintf("https://www.pinterest.com/%s/", name)
 	link = url
