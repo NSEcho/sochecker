@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/lateralusd/sochecker/checker"
+	_ "github.com/lateralusd/sochecker/plugins/deezer"
 	_ "github.com/lateralusd/sochecker/plugins/facebook"
 	_ "github.com/lateralusd/sochecker/plugins/flickr"
 	_ "github.com/lateralusd/sochecker/plugins/github"
