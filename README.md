@@ -9,6 +9,8 @@ Currently, it supports:
 * Pinterest
 * Flick
 * OLX.ba local
+* Reddit
+* Deezer
 
 # Installation
 ```bash
