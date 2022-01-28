@@ -23,6 +23,10 @@ func (fb *FBCheck) Check(client *http.Client, name string) bool {
 	return resp.StatusCode == 200
 }
 
+func (fb *FBCheck) Info() string {
+	return "Check the username on facebook"
+}
+
 func (fb *FBCheck) Link() string {
 	return link
 }

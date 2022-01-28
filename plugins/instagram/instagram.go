@@ -53,6 +53,16 @@ func (ig *IGCheck) Check(client *http.Client, name string) bool {
 	return resp.ContentLength != 2
 }
 
+var info = `Check the username on instagram.
+	You need to create .cookies file containing following cookies:
+		ds_user_id
+		sessionid
+		csrftoken`
+
+func (ig *IGCheck) Info() string {
+	return info
+}
+
 func (ig *IGCheck) Link() string {
 	return link
 }

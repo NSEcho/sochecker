@@ -25,6 +25,10 @@ func (ol *PTCheck) Check(client *http.Client, name string) bool {
 	return resp.StatusCode == 200
 }
 
+func (pt *PTCheck) Info() string {
+	return "Check the username on pinterest"
+}
+
 func (pt *PTCheck) Link() string {
 	return link
 }

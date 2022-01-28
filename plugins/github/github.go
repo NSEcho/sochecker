@@ -23,6 +23,10 @@ func (gh *GHCheck) Check(client *http.Client, name string) bool {
 	return resp.StatusCode == 200
 }
 
+func (gh *GHCheck) Info() string {
+	return "Check the username on github"
+}
+
 func (gh *GHCheck) Link() string {
 	return link
 }

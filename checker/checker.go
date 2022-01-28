@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
@@ -30,6 +31,7 @@ type result struct {
 
 type Checker interface {
 	Check(client *http.Client, name string) bool
+	Info() string
 	Link() string
 }
 
@@ -48,6 +50,18 @@ func Checks() []string {
 	}
 	sort.Strings(list)
 	return list
+}
+
+func Info(moduleName string) string {
+	if moduleName != "all" && moduleName != "" {
+		return checks[moduleName].Info()
+	}
+	var infos []string
+	for name, check := range checks {
+		info := fmt.Sprintf("\"%s\": %s", name, check.Info())
+		infos = append(infos, info)
+	}
+	return strings.Join(infos, "\n")
 }
 
 func RunAll(name string) {

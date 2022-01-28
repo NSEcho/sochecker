@@ -24,6 +24,10 @@ func (ol *FLCheck) Check(client *http.Client, name string) bool {
 	return resp.StatusCode == 200
 }
 
+func (fl *FLCheck) Info() string {
+	return "Check the username on flickr"
+}
+
 func (fl *FLCheck) Link() string {
 	return link
 }

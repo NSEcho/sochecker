@@ -21,6 +21,10 @@ func (tw *TWCheck) Check(client *http.Client, name string) bool {
 	return err == nil
 }
 
+func (tw *TWCheck) Info() string {
+	return "Check the username on twitter"
+}
+
 func (tw *TWCheck) Link() string {
 	return link
 }

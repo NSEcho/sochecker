@@ -23,6 +23,10 @@ func (ol *OLXCheck) Check(client *http.Client, name string) bool {
 	return resp.StatusCode == 200
 }
 
+func (ol *OLXCheck) Info() string {
+	return "Check the username on olx.ba"
+}
+
 func (ol *OLXCheck) Link() string {
 	return link
 }
