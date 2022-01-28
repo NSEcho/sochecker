@@ -40,7 +40,7 @@ func (dc *DeezerCheck) Check(client *http.Client, name string) bool {
 }
 
 func (dc *DeezerCheck) Info() string {
-	return "Check the username on pinterest"
+	return "Check the username on deezer"
 }
 
 func (dc *DeezerCheck) Link() string {
