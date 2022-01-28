@@ -44,7 +44,7 @@ If you do not have .cookies file present and populated, instagram driver will re
 
 # Contributing/Extending
 
-All it takes to write a new plugin is to create another directory under `plugins/`, create a `.igo` file.
+All it takes to write a new plugin is to create another directory under `plugins/`, create a `.go` file.
 
 For example, if you are writing for the amazon.
 
