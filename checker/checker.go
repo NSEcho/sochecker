@@ -54,7 +54,10 @@ func Checks() []string {
 
 func Info(moduleName string) string {
 	if moduleName != "all" && moduleName != "" {
-		return checks[moduleName].Info()
+		if _, ok := checks[moduleName]; ok {
+			return checks[moduleName].Info()
+		}
+		return "Module not found"
 	}
 	var infos []string
 	for name, check := range checks {
