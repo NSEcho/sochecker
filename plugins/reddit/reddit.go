@@ -19,14 +19,14 @@ func (rc *RedditCheck) Check(client *http.Client, name string) bool {
 
 	req, err := http.NewRequest("GET", checkurl, nil)
 	if err != nil {
-		panic(err)
+		return false
 	}
 
 	req.Header.Set("User-Agent", "Instagram 10.3.2 (iPhone7,2; iPhone OS 9_3_3; en_US; en-US; scale=2.00; 750x1334) AppleWebKit/420+")
 
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		return false
 	}
 	defer resp.Body.Close()
 

@@ -22,12 +22,12 @@ func (ig *IGCheck) Check(client *http.Client, name string) bool {
 
 	req, err := http.NewRequest("GET", igurl, nil)
 	if err != nil {
-		panic(err)
+		return false
 	}
 
 	c, err := readCookiesFromFile()
 	if err != nil {
-		panic(err)
+		return false
 	}
 
 	req.Header.Set("User-Agent", "Instagram 10.3.2 (iPhone7,2; iPhone OS 9_3_3; en_US; en-US; scale=2.00; 750x1334) AppleWebKit/420+")
@@ -46,7 +46,7 @@ func (ig *IGCheck) Check(client *http.Client, name string) bool {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		return false
 	}
 	defer resp.Body.Close()
 
