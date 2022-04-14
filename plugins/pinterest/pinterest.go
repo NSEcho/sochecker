@@ -7,14 +7,13 @@ import (
 	"github.com/lateralusd/sochecker/checker"
 )
 
-var link = ""
+type PTCheck struct {
+	link string
+}
 
-type PTCheck struct{}
-
-func (ol *PTCheck) Check(client *http.Client, name string) bool {
-
+func (pt *PTCheck) Check(client *http.Client, name string) bool {
 	url := fmt.Sprintf("https://www.pinterest.com/%s/", name)
-	link = url
+	pt.link = url
 	resp, err := client.Get(url)
 	if err != nil {
 		fmt.Println("error", err)
@@ -30,7 +29,7 @@ func (pt *PTCheck) Info() string {
 }
 
 func (pt *PTCheck) Link() string {
-	return link
+	return pt.link
 }
 
 func init() {

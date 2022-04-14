@@ -13,7 +13,6 @@ type DeezerCheck struct {
 	link string
 }
 
-// https://www.deezer.com/search/asilva/user
 func (dc *DeezerCheck) Check(client *http.Client, name string) bool {
 	checkurl := fmt.Sprintf("https://www.deezer.com/search/%s", name)
 	dc.link = checkurl

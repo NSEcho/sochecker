@@ -7,13 +7,13 @@ import (
 	"github.com/lateralusd/sochecker/checker"
 )
 
-var link = ""
-
-type GHCheck struct{}
+type GHCheck struct {
+	link string
+}
 
 func (gh *GHCheck) Check(client *http.Client, name string) bool {
 	url := fmt.Sprintf("https://github.com/%s/", name)
-	link = url
+	gh.link = url
 	resp, err := client.Get(url)
 	if err != nil {
 		return false
@@ -28,7 +28,7 @@ func (gh *GHCheck) Info() string {
 }
 
 func (gh *GHCheck) Link() string {
-	return link
+	return gh.link
 }
 
 func init() {

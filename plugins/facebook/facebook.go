@@ -7,13 +7,13 @@ import (
 	"github.com/lateralusd/sochecker/checker"
 )
 
-var link = ""
-
-type FBCheck struct{}
+type FBCheck struct {
+	link string
+}
 
 func (fb *FBCheck) Check(client *http.Client, name string) bool {
 	url := fmt.Sprintf("https://www.facebook.com/%s/", name)
-	link = url
+	fb.link = url
 	resp, err := client.Get(url)
 	if err != nil {
 		return false
@@ -28,7 +28,7 @@ func (fb *FBCheck) Info() string {
 }
 
 func (fb *FBCheck) Link() string {
-	return link
+	return fb.link
 }
 
 func init() {

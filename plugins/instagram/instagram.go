@@ -11,13 +11,13 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var link = ""
-
-type IGCheck struct{}
+type IGCheck struct {
+	link string
+}
 
 func (ig *IGCheck) Check(client *http.Client, name string) bool {
 	igurl := fmt.Sprintf("https://www.instagram.com/%s/", name)
-	link = igurl
+	ig.link = igurl
 	igurl += "?__a=1"
 
 	req, err := http.NewRequest("GET", igurl, nil)
@@ -64,7 +64,7 @@ func (ig *IGCheck) Info() string {
 }
 
 func (ig *IGCheck) Link() string {
-	return link
+	return ig.link
 }
 
 func init() {

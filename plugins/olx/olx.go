@@ -7,13 +7,13 @@ import (
 	"github.com/lateralusd/sochecker/checker"
 )
 
-var link = ""
-
-type OLXCheck struct{}
+type OLXCheck struct {
+	link string
+}
 
 func (ol *OLXCheck) Check(client *http.Client, name string) bool {
 	url := fmt.Sprintf("https://api.olx.ba/profil/%s/", name)
-	link = url
+	ol.link = url
 	resp, err := client.Get(url)
 	if err != nil {
 		return false
@@ -28,7 +28,7 @@ func (ol *OLXCheck) Info() string {
 }
 
 func (ol *OLXCheck) Link() string {
-	return link
+	return ol.link
 }
 
 func init() {

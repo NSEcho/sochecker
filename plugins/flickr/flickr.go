@@ -7,13 +7,13 @@ import (
 	"github.com/lateralusd/sochecker/checker"
 )
 
-var link = ""
+type FLCheck struct {
+	link string
+}
 
-type FLCheck struct{}
-
-func (ol *FLCheck) Check(client *http.Client, name string) bool {
+func (fl *FLCheck) Check(client *http.Client, name string) bool {
 	url := fmt.Sprintf("https://www.flickr.com/people/%s/", name)
-	link = url
+	fl.link = url
 	resp, err := client.Get(url)
 	if err != nil {
 		fmt.Println("error", err)
@@ -29,7 +29,7 @@ func (fl *FLCheck) Info() string {
 }
 
 func (fl *FLCheck) Link() string {
-	return link
+	return fl.link
 }
 
 func init() {
