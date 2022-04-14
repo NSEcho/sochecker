@@ -27,12 +27,14 @@ type result struct {
 	driverName string
 	found      bool
 	link       string
+	err        error
 }
 
 type Checker interface {
 	Check(client *http.Client, name string) bool
 	Info() string
 	Link() string
+	Error() error
 }
 
 func Register(name string, driver Checker) {
@@ -95,6 +97,7 @@ func RunAll(name string) {
 				driverName: driverName,
 				found:      found,
 				link:       driver.Link(),
+				err:        driver.Error(),
 			}
 		}()
 	}
@@ -109,7 +112,7 @@ func RunAll(name string) {
 	t.SetStyle(table.StyleColoredYellowWhiteOnBlack)
 	t.SetIndexColumn(1)
 
-	t.AppendHeader(table.Row{"#", "Driver", "Found", "Link"})
+	t.AppendHeader(table.Row{"#", "Driver", "Found", "Link", "Error"})
 
 	var foundCounter = 0
 
@@ -124,7 +127,11 @@ func RunAll(name string) {
 			link = ""
 			found = termenv.String(fmt.Sprintf("%+v", res.found)).Foreground(p.Color("#ff0000"))
 		}
-		t.AppendRow(table.Row{i + 1, res.driverName, found, link})
+		var errMessage string
+		if res.err != nil {
+			errMessage = res.err.Error()
+		}
+		t.AppendRow(table.Row{i + 1, res.driverName, found, link, errMessage})
 	}
 
 	title := fmt.Sprintf("Results of checking \"%s\" \n(Drivers count: %d, found in: %d)", name, len(results), foundCounter)

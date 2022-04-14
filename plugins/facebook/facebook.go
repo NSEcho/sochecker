@@ -9,6 +9,7 @@ import (
 
 type FBCheck struct {
 	link string
+	err  error
 }
 
 func (fb *FBCheck) Check(client *http.Client, name string) bool {
@@ -16,6 +17,7 @@ func (fb *FBCheck) Check(client *http.Client, name string) bool {
 	fb.link = url
 	resp, err := client.Get(url)
 	if err != nil {
+		fb.err = err
 		return false
 	}
 	defer resp.Body.Close()
@@ -29,6 +31,10 @@ func (fb *FBCheck) Info() string {
 
 func (fb *FBCheck) Link() string {
 	return fb.link
+}
+
+func (fb *FBCheck) Error() error {
+	return fb.err
 }
 
 func init() {

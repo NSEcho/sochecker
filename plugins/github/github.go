@@ -9,6 +9,7 @@ import (
 
 type GHCheck struct {
 	link string
+	err  error
 }
 
 func (gh *GHCheck) Check(client *http.Client, name string) bool {
@@ -16,6 +17,7 @@ func (gh *GHCheck) Check(client *http.Client, name string) bool {
 	gh.link = url
 	resp, err := client.Get(url)
 	if err != nil {
+		gh.err = err
 		return false
 	}
 	defer resp.Body.Close()
@@ -29,6 +31,10 @@ func (gh *GHCheck) Info() string {
 
 func (gh *GHCheck) Link() string {
 	return gh.link
+}
+
+func (gh *GHCheck) Error() error {
+	return gh.err
 }
 
 func init() {

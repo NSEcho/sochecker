@@ -9,6 +9,7 @@ import (
 
 type OLXCheck struct {
 	link string
+	err  error
 }
 
 func (ol *OLXCheck) Check(client *http.Client, name string) bool {
@@ -16,6 +17,7 @@ func (ol *OLXCheck) Check(client *http.Client, name string) bool {
 	ol.link = url
 	resp, err := client.Get(url)
 	if err != nil {
+		ol.err = err
 		return false
 	}
 	defer resp.Body.Close()
@@ -29,6 +31,10 @@ func (ol *OLXCheck) Info() string {
 
 func (ol *OLXCheck) Link() string {
 	return ol.link
+}
+
+func (ol *OLXCheck) Error() error {
+	return ol.err
 }
 
 func init() {

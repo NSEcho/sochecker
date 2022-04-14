@@ -11,6 +11,7 @@ import (
 
 type DeezerCheck struct {
 	link string
+	err  error
 }
 
 func (dc *DeezerCheck) Check(client *http.Client, name string) bool {
@@ -19,6 +20,7 @@ func (dc *DeezerCheck) Check(client *http.Client, name string) bool {
 
 	req, err := http.NewRequest("GET", checkurl, nil)
 	if err != nil {
+		dc.err = err
 		return false
 	}
 
@@ -26,6 +28,7 @@ func (dc *DeezerCheck) Check(client *http.Client, name string) bool {
 
 	resp, err := client.Do(req)
 	if err != nil {
+		dc.err = err
 		return false
 	}
 	defer resp.Body.Close()
@@ -44,6 +47,10 @@ func (dc *DeezerCheck) Info() string {
 
 func (dc *DeezerCheck) Link() string {
 	return dc.link
+}
+
+func (dc *DeezerCheck) Error() error {
+	return dc.err
 }
 
 func init() {

@@ -13,6 +13,7 @@ import (
 
 type IGCheck struct {
 	link string
+	err  error
 }
 
 func (ig *IGCheck) Check(client *http.Client, name string) bool {
@@ -22,11 +23,13 @@ func (ig *IGCheck) Check(client *http.Client, name string) bool {
 
 	req, err := http.NewRequest("GET", igurl, nil)
 	if err != nil {
+		ig.err = err
 		return false
 	}
 
 	c, err := readCookiesFromFile()
 	if err != nil {
+		ig.err = err
 		return false
 	}
 
@@ -46,6 +49,7 @@ func (ig *IGCheck) Check(client *http.Client, name string) bool {
 
 	resp, err := client.Do(req)
 	if err != nil {
+		ig.err = err
 		return false
 	}
 	defer resp.Body.Close()
@@ -65,6 +69,10 @@ func (ig *IGCheck) Info() string {
 
 func (ig *IGCheck) Link() string {
 	return ig.link
+}
+
+func (ig *IGCheck) Error() error {
+	return ig.err
 }
 
 func init() {

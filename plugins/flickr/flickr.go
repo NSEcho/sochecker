@@ -9,6 +9,7 @@ import (
 
 type FLCheck struct {
 	link string
+	err  error
 }
 
 func (fl *FLCheck) Check(client *http.Client, name string) bool {
@@ -16,7 +17,7 @@ func (fl *FLCheck) Check(client *http.Client, name string) bool {
 	fl.link = url
 	resp, err := client.Get(url)
 	if err != nil {
-		fmt.Println("error", err)
+		fl.err = err
 		return false
 	}
 	defer resp.Body.Close()
@@ -30,6 +31,10 @@ func (fl *FLCheck) Info() string {
 
 func (fl *FLCheck) Link() string {
 	return fl.link
+}
+
+func (fl *FLCheck) Error() error {
+	return fl.err
 }
 
 func init() {

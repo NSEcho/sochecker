@@ -9,12 +9,13 @@ import (
 	tsc "github.com/n0madic/twitter-scraper"
 )
 
-var link = ""
-
-type TWCheck struct{}
+type TWCheck struct {
+	link string
+	err  error
+}
 
 func (tw *TWCheck) Check(client *http.Client, name string) bool {
-	link = fmt.Sprintf("https://www.twitter.com/%s/", name)
+	tw.link = fmt.Sprintf("https://www.twitter.com/%s/", name)
 
 	scp := tsc.New().SetSearchMode(tsc.SearchUsers)
 	_, err := scp.GetProfile(name)
@@ -26,7 +27,11 @@ func (tw *TWCheck) Info() string {
 }
 
 func (tw *TWCheck) Link() string {
-	return link
+	return tw.link
+}
+
+func (tw *TWCheck) Error() error {
+	return tw.err
 }
 
 func init() {

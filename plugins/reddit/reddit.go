@@ -11,6 +11,7 @@ import (
 
 type RedditCheck struct {
 	link string
+	err  error
 }
 
 func (rc *RedditCheck) Check(client *http.Client, name string) bool {
@@ -19,6 +20,7 @@ func (rc *RedditCheck) Check(client *http.Client, name string) bool {
 
 	req, err := http.NewRequest("GET", checkurl, nil)
 	if err != nil {
+		rc.err = err
 		return false
 	}
 
@@ -26,11 +28,16 @@ func (rc *RedditCheck) Check(client *http.Client, name string) bool {
 
 	resp, err := client.Do(req)
 	if err != nil {
+		rc.err = err
 		return false
 	}
 	defer resp.Body.Close()
 
-	b, _ := ioutil.ReadAll(resp.Body)
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		rc.err = err
+		return false
+	}
 	return !strings.Contains(string(b), "nobody on Reddit")
 }
 
@@ -40,6 +47,10 @@ func (rc *RedditCheck) Info() string {
 
 func (rc *RedditCheck) Link() string {
 	return rc.link
+}
+
+func (rc *RedditCheck) Error() error {
+	return rc.err
 }
 
 func init() {
