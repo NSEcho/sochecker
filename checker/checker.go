@@ -69,12 +69,12 @@ func Info(moduleName string) string {
 	return strings.Join(infos, "\n")
 }
 
-func RunAll(name string) {
+func RunAll(name string, timeout int) {
 	mutex.RLock()
 	defer mutex.RUnlock()
 
 	client := &http.Client{
-		Timeout: 3 * time.Second,
+		Timeout: time.Duration(timeout) * time.Second,
 	}
 
 	var results []result
